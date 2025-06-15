@@ -1,0 +1,24 @@
+{% extends 'recetas/base.html' %}
+
+{% block title %}Lista de Ingredientes{% endblock %}
+
+{% block content %}
+<h1>Lista de Usuarios</h1>
+
+<ul>
+    {% for usuario in usuarios %}
+        <li>{{ usuario.nombre_usuario }}</li>
+    {% endfor %}
+</ul>
+
+{% if usuarios %}
+    <ul>
+        {% for usuario in usuarios %}
+            <li>{{ usuario.nombre_usuario }} - {{ usuario.email }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay usuarios registrados.</p>
+{% endif %}
+
+{%endblock%}

@@ -1,0 +1,94 @@
+{% extends 'recetas/base.html' %}
+{% load static %}
+
+{% block title %}Mi Perfil - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="profile-card text-center mb-5">
+        <h2 class="mb-4">Mi Perfil</h2>
+
+        <div class="mb-4">
+            {% if perfil.foto_perfil %}
+                <img src="{{ perfil.foto_perfil.url }}" alt="Foto de Perfil" class="profile-img">
+            {% else %}
+                <img src="https://via.placeholder.com/150?text=Sin+Foto" alt="Sin Foto" class="profile-img">
+            {% endif %}
+        </div>
+
+        <p class="lead"><strong>Nombre de usuario:</strong> {{ perfil.usuario.username }}</p>
+        <p><strong>Email:</strong> {{ perfil.usuario.email }}</p>
+
+        {% if perfil.descripcion %}
+            <p><strong>Acerca de mí:</strong> {{ perfil.descripcion }}</p>
+        {% else %}
+            <p class="text-muted">No has añadido una descripción aún.</p>
+        {% endif %}
+
+        {% if perfil.fecha_nacimiento %}
+            <p><strong>Fecha de Nacimiento:</strong> {{ perfil.fecha_nacimiento|date:"d M, Y" }}</p>
+        {% endif %}
+
+        <div class="mt-4">
+            <a href="{% url 'usuario:editar_perfil' %}" class="btn btn-primary me-2">Editar Mi Perfil</a>
+            <a href="{% url 'usuario:cambiar_contrasena' %}" class="btn btn-secondary">Cambiar Contraseña</a>
+            {# ELIMINADO: Ya no mostramos un botón directo a "Mis Recetas Favoritas" aquí #}
+        </div>
+    </div>
+
+    {# ELIMINADO: Sección para CREAR NUEVA RECETA #}
+    {# Si la lógica de creación de receta se movió a otro lugar, esta sección ya no va aquí. #}
+
+    <div class="mt-5 border-top pt-4">
+        <h3>Mis Recetas Publicadas</h3>
+        {% if recetas_del_usuario %}
+            <div class="row">
+                {% for receta in recetas_del_usuario %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card recipe-card h-100 shadow-sm">
+                            {% if receta.imagen %}
+                                <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.nombre }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/400x250?text=Sin+Imagen" class="card-img-top" alt="Sin Imagen">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="{% url 'detalle_receta' receta.id %}">{{ receta.nombre }}</a></h5>
+                                <p class="card-text">{{ receta.descripcion|truncatewords:20 }}</p>
+                                <p class="card-text"><small class="text-muted">Categoría: {{ receta.categoria }}</small></p>
+                                <p class="card-text"><small class="text-muted">Creada: {{ receta.fecha_creacion|date:"d M Y" }}</small></p>
+
+                                <h6 class="card-subtitle mb-2 text-muted">Ingredientes:</h6>
+                                <ul class="list-unstyled small">
+                                    {% for ri in receta.recetaingrediente_set.all %}
+                                        <li>{{ ri.cantidad }} {{ ri.ingrediente.unidad_medida }} de {{ ri.ingrediente.nombre }}</li>
+                                    {% empty %}
+                                        <li>No hay ingredientes registrados.</li>
+                                    {% endfor %}
+                                </ul>
+
+                                <div class="mt-3">
+                                    <a href="{% url 'detalle_receta' receta.id %}" class="btn btn-sm btn-info me-1">Ver</a>
+                                    <a href="{% url 'editar_receta' receta.id %}" class="btn btn-sm btn-warning me-1">Editar</a>
+
+                                    {# Formulario para ELIMINAR la receta #}
+                                    <form method="post" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta receta?');">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="receta_id" value="{{ receta.id }}">
+                                        <button type="submit" name="eliminar_receta" class="btn btn-sm btn-danger">Eliminar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">Aún no has publicado ninguna receta.</p>
+        {% endif %}
+    </div>
+
+    {# ELIMINADA: Sección para MIS RECETAS FAVORITAS #}
+    {# Si esta sección fue eliminada del contexto de la vista, no debe estar en el template #}
+
+</div>
+{% endblock %}
