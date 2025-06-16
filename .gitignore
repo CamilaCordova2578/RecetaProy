@@ -1,26 +1,26 @@
-# Entorno virtual
+
 venv/
 env/
 ENV/
 .venv/
 .ENV/
 
-# Archivos compilados de Python
+
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Archivos de base de datos
+
 *.sqlite3
 
-# Archivos de configuración o claves sensibles
+
 *.env
 .env*
 
-# Archivos de log
+
 *.log
 
-# Archivos temporales o de caché
+
 *.tmp
 *.bak
 *.swp
@@ -28,36 +28,36 @@ __pycache__/
 *.sass-cache
 *.coverage
 
-# Archivos generados por collectstatic (si usas STATIC_ROOT)
+
 staticfiles/
 static_root/
 
-# Archivos de subida/media
+
 media/
 media_root/
 
-# IDEs y editores
+
 .vscode/
 .idea/
 *.code-workspace
 
-# Archivos del sistema
+
 .DS_Store
 Thumbs.db
 
-# Archivos de test/mocks
+
 coverage.xml
 htmlcov/
 
-# Archivos de migraciones conflictivos (opcional)
-# **Usar con cuidado**
-# */migrations/*.pyc
-# */migrations/*.py~
 
-# Node/npm si usas JavaScript avanzado o React frontend
+
+
+
+
+
 node_modules/
 
-# Otros
+
 *.tar.gz
 *.zip
 *.egg-info/

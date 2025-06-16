@@ -13,23 +13,23 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+
+
+
 SECRET_KEY = 'django-insecure-u6e0=j)^&*t03*n(5_7@9$03ohmh&j4=dev=i40sy1d&=vo7*1'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
 
-# Application definition
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,8 +74,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'recetas_proyecto.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+
 
 DATABASES = {
     'default': {
@@ -85,8 +85,8 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -104,8 +104,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
+
+
 
 LANGUAGE_CODE = 'es-es'
 
@@ -116,29 +116,29 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+
+
 
 STATIC_URL = 'static/'
-# Esto le dice a Django dónde buscar archivos estáticos en tus aplicaciones
+
 STATICFILES_DIRS = []
 
-# Esto es donde Django recolectará todos los archivos estáticos para producción
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configuración para archivos media (imágenes)
+
 MEDIA_URL = '/media/' 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#Login no de django, personalizado
+
 LOGIN_URL = 'usuario:login' 
-LOGIN_REDIRECT_URL = 'usuario:perfil_usuario' # Redirige al perfil después del login
+LOGIN_REDIRECT_URL = 'usuario:perfil_usuario' 
 LOGOUT_REDIRECT_URL = 'inicio'
 
-#Liberia crispy
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5" # O "bootstrap4", "bootstrap3"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5" 
 CRISPY_TEMPLATE_PACK = "bootstrap5" 

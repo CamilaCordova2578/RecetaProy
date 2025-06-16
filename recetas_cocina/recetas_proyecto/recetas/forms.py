@@ -1,12 +1,12 @@
-# recetas/forms.py
+
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Receta, Ingrediente, RecetaIngrediente, Usuario
-# Asegúrate de importar inlineformset_factory
+
 from django.forms import inlineformset_factory
-# Importa FormHelper y Layout
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, HTML
 
@@ -16,17 +16,17 @@ class FormularioRegistroUsuario(UserCreationForm):
 
     class Meta:
         model = User
-        # Asegúrate de que estos campos existan o se manejen en tu modelo User extendido
-        # password1 y password2 son inherentes de UserCreationForm, no los pongas en 'fields' de Meta si no quieres duplicidad
-        fields = ('username', 'email') # Elimino 'nombre_usuario' aquí porque ya está como campo directo del formulario
-        # Nota: UserCreationForm ya maneja las contraseñas. 'nombre_usuario' y 'email' deben ser manejados en save() de la vista o en tu modelo Usuario.
+        
+        
+        fields = ('username', 'email') 
+        
 
-    # Si Usuario tiene OneToOne con User y copia campos, la lógica de guardado debe estar en la vista.
-    # Por ejemplo, en tu vista registro_usuario, creas Usuario.objects.create(user=user, ...)
-    # El campo 'nombre_usuario' en FormularioRegistroUsuario NO ES el campo 'username' del modelo User.
-    # Si quieres que 'nombre_usuario' del modelo Usuario se llene con el 'username' del formulario,
-    # simplemente guarda el user, y luego crea el Usuario pasándole user.username al campo nombre_usuario.
-    # O mejor aún, haz que 'nombre_usuario' en el modelo Usuario sea opcional o derive del user.username.
+    
+    
+    
+    
+    
+    
 
 class FormularioReceta(forms.ModelForm):
     class Meta:
@@ -34,12 +34,6 @@ class FormularioReceta(forms.ModelForm):
         fields = ['nombre', 'descripcion', 'categoria', 'imagen']
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 4}),
-            # --- CAMBIO IMPORTANTE AQUÍ ---
-            # Si 'imagen' es ImageField en models.py y quieres subir archivos,
-            # DEBES ELIMINAR el widget TextInput. Django usará el widget FileInput por defecto.
-            # Si NO quieres subir archivos y solo pegar URLs, entonces tu modelo 'imagen' debería ser CharField o URLField.
-            # Asumo que quieres subir archivos, así que lo elimino.
-            # 'imagen': forms.TextInput(attrs={'placeholder': 'URLs de la imagen'})
         }
 class FormularioIngrediente(forms.ModelForm):
     class Meta:
@@ -88,16 +82,17 @@ class RecetaIngredienteForm(forms.ModelForm):
         self.fields['ingrediente'].queryset = Ingrediente.objects.all()
         self.fields['ingrediente'].empty_label = "Seleccionar ingrediente"
 
-# Formset para manejar múltiples ingredientes
+
 RecetaIngredienteFormSet = inlineformset_factory(
     Receta, 
     RecetaIngrediente,
     form=RecetaIngredienteForm,
-    extra=1,  # Formulario extra vacío
+    extra=1, 
     can_delete=True,
-    min_num=1,  # Mínimo un ingrediente
+    min_num=1,  
     validate_min=True
 )
+
 class FormularioBusqueda(forms.Form):
     ingrediente = forms.CharField(
         max_length=100, 
