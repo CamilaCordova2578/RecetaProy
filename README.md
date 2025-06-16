@@ -1,4 +1,4 @@
 ## Integrantes
 
 * Camila Cordova<br>
-* Leonor Chavarri<br>
+* Leonor Chavarria<br>
