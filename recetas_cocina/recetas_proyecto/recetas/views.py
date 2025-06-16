@@ -4,22 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseForbidden
 from django.contrib import messages
 from django.db import transaction
-
-# Importar las vistas de autenticación de Django
 from django.contrib.auth.views import LoginView, LogoutView
 from .forms import FormularioReceta, RecetaIngredienteFormSet, RecetaForm
-
-
 from .models import Receta, Ingrediente, RecetaIngrediente, Favorito, Usuario
 from .forms import FormularioRegistroUsuario, FormularioReceta, FormularioIngrediente, FormularioBusqueda
-
-
 from django.db.models import Q
 from .models import Receta, Ingrediente
-
-
-
-
 
 def buscador_global(request):
     query = request.GET.get('q', '')
@@ -34,7 +24,6 @@ def buscador_global(request):
             Q(recetaingrediente__ingrediente__nombre__icontains=query)
         ).distinct()
         sugerencias = resultados[:10]
-
     context = {
         'query': query,
         'resultados': resultados,
@@ -46,7 +35,6 @@ def buscador_global(request):
 def sugerencias_ajax(request):
     query = request.GET.get('q', '')
     sugerencias = []
-
     if query:
         recetas = Receta.objects.filter(
         Q(nombre__istartswith=query) |
@@ -58,7 +46,6 @@ def sugerencias_ajax(request):
                 'nombre': receta.nombre,
                 'id': receta.id
             })
-
     return JsonResponse({'sugerencias': sugerencias})
 
 
@@ -95,7 +82,7 @@ def lista_recetas(request):
             recetaingrediente__ingrediente__nombre__icontains=ingrediente_buscar
         ).distinct()
 
-    # Obtener los IDs de recetas que están en favoritos del usuario actual
+
     recetas_favoritas_ids = set()
     if request.user.is_authenticated:
         recetas_favoritas_ids = set(
@@ -107,7 +94,7 @@ def lista_recetas(request):
         'form': form,
         'recetas_favoritas_ids': recetas_favoritas_ids
     })
-# VISTA PARA VER EL DETALLE DE UNA RECETA (corresponde al botón "View")
+
 def detalle_receta(request, receta_id):
     receta = get_object_or_404(Receta, id=receta_id)
     ingredientes = RecetaIngrediente.objects.filter(receta=receta)
@@ -122,13 +109,12 @@ def detalle_receta(request, receta_id):
         'es_favorito': es_favorito
     })
 
-# VISTA PRINCIPAL DEL PERFIL DE USUARIO: Gestiona creación y eliminación de recetas propias
-# (El formulario de "Delete" en el card de perfil_usuario.html apunta aquí)
+
 @login_required
 def perfil_usuario(request):
     recetas_del_usuario = Receta.objects.filter(creado_por=request.user).order_by('-fecha_creacion')
 
-    # Lógica para CREAR una nueva receta
+
     if 'crear_receta' in request.POST:
         form_creacion = FormularioReceta(request.POST, request.FILES)
         if form_creacion.is_valid():
@@ -143,7 +129,6 @@ def perfil_usuario(request):
     else:
         form_creacion = FormularioReceta()
 
-    # Lógica para ELIMINAR una receta existente (corresponde al botón "Delete")
     if 'eliminar_receta' in request.POST:
         receta_id_a_eliminar = request.POST.get('receta_id')
         if receta_id_a_eliminar:
@@ -167,7 +152,6 @@ def perfil_usuario(request):
     return render(request, 'recetas/perfil_usuario.html', context)
 
 
-# VISTA PARA EDITAR UNA RECETA ESPECÍFICA (corresponde al botón "Edit")
 @login_required
 def editar_receta(request, receta_id):
     receta = get_object_or_404(Receta, id=receta_id, creado_por=request.user)
@@ -175,12 +159,8 @@ def editar_receta(request, receta_id):
     if request.method == 'POST':
         form = RecetaForm(request.POST, request.FILES, instance=receta)
         formset = RecetaIngredienteFormSet(request.POST, instance=receta)
-        
         if form.is_valid() and formset.is_valid():
-            # Guardar la receta
             receta_actualizada = form.save()
-            
-            # Guardar los ingredientes
             formset.instance = receta_actualizada
             formset.save()
             
@@ -240,59 +220,29 @@ def eliminar_ingrediente_receta(request, receta_id, ingrediente_id):
             return JsonResponse({'success': False, 'error': 'Ingrediente no encontrado'})
     
     return JsonResponse({'success': False})
-# Las funciones 'crear_receta' y 'eliminar_receta' separadas NO SON NECESARIAS
-# Si las tenías definidas como funciones individuales, puedes borrarlas de tu views.py.
-# @login_required
-# def crear_receta(request):
-#    pass # Lógica movida a perfil_usuario
 
-# @login_required
-# def eliminar_receta(request, receta_id):
-#    pass # Lógica movida a perfil_usuario
 
 @login_required
 def crear_receta(request):
     if request.method == 'POST':
-        # 1. Instanciar el formulario principal de la Receta
-        # Es CRUCIAL pasar request.FILES si tu FormularioReceta tiene un campo de imagen
         form = FormularioReceta(request.POST, request.FILES)
-
-        # 2. Instanciar el Formset para RecetaIngrediente
-        # Le pasamos el prefijo 'ingredientes' que usamos en el template para aislar sus campos
         ingrediente_formset = RecetaIngredienteFormSet(request.POST, prefix='ingredientes')
-
-        # 3. Validar ambos formularios
         if form.is_valid() and ingrediente_formset.is_valid():
             try:
-                with transaction.atomic(): # Esto asegura que si falla el guardado de ingredientes, la receta tampoco se guarda
-                    # Guarda la Receta principal, pero no la "comitees" aún
+                with transaction.atomic(): 
                     receta = form.save(commit=False)
-                    receta.creado_por = request.user # Asigna el usuario logueado
-                    receta.save() # Ahora guarda la receta en la base de datos
-
-                    # Asigna la instancia de la receta recién creada al formset
-                    # Esto vincula cada RecetaIngrediente que se guarde a esta 'receta'
+                    receta.creado_por = request.user 
+                    receta.save() 
                     ingrediente_formset.instance = receta
-                    
-                    # Guarda los formularios del formset
-                    # Esto creará las instancias de RecetaIngrediente en la base de datos
                     ingrediente_formset.save()
 
                 messages.success(request, '¡Receta y sus ingredientes creados exitosamente!')
-                # Redirige a la página de detalle de la receta recién creada
-                # Asegúrate de que 'detalle_receta' sea el 'name' correcto en tus urls.py de la app 'recetas'
-                # y que tome 'pk' o 'receta_id' como argumento.
-                return redirect('detalle_receta', receta_id=receta.id) # O 'receta_id=receta.id' si es el caso
+                return redirect('detalle_receta', receta_id=receta.id) 
             except Exception as e:
                 messages.error(request, f'Ocurrió un error al guardar la receta o los ingredientes: {e}')
-                # Si hay una excepción durante la transacción, el `transaction.atomic()` la revertirá.
-                # Puedes logear el error 'e' para depuración.
-
         else:
-            # Si alguno de los formularios no es válido, se mostrarán los errores en el template
             messages.error(request, 'Por favor, corrige los errores en el formulario de la receta o en los ingredientes.')
     else:
-        # Para solicitudes GET, inicializa formularios vacíos
         form = FormularioReceta()
         ingrediente_formset = RecetaIngredienteFormSet(prefix='ingredientes')
 
@@ -309,32 +259,18 @@ def toggle_favorito(request, receta_id):
             usuario=request.user,
             receta=receta
         )
-
         if not created:
             favorito.delete()
             es_favorito = False
         else:
             es_favorito = True
-
-        # ESTO ES CRUCIAL: DEBE DEVOLVER JSON
         return JsonResponse({'es_favorito': es_favorito})
     else:
-        # Para solicitudes GET, devuelve un 403 o redirige si lo prefieres,
-        # pero el AJAX siempre envía POST.
         return HttpResponseForbidden("Método no permitido.")
 @login_required
 def mis_favoritos(request):
-    """
-    Muestra las recetas que el usuario ha marcado como favoritas.
-    """
-    # Filtra los objetos Favorito para el usuario actual.
-    # .select_related('receta') optimiza la consulta para obtener los datos de la receta.
+    
     favoritos = Favorito.objects.filter(usuario=request.user).select_related('receta')
-    
-    # Puedes pasar directamente los objetos Favorito al template
-    # o mapearlos a una lista de recetas si lo prefieres.
-    # Aquí pasaremos los objetos Favorito porque incluyen la fecha, etc.
-    
     context = {
         'favoritos': favoritos,
         'title': 'Mis Recetas Favoritas',
@@ -366,7 +302,7 @@ def quitar_favorito(request, receta_id):
     """
     Elimina una receta de la lista de favoritos del usuario.
     """
-    if request.method == 'POST': # Es buena práctica usar POST para acciones que modifican datos
+    if request.method == 'POST': 
         receta = get_object_or_404(Receta, pk=receta_id)
         try:
             favorito = Favorito.objects.get(usuario=request.user, receta=receta)
@@ -376,6 +312,4 @@ def quitar_favorito(request, receta_id):
             messages.warning(request, f'"{receta.nombre}" no estaba en tus favoritos.')
         except Exception as e:
             messages.error(request, f'Ocurrió un error al quitar la receta de favoritos: {e}')
-    
-    # Redirige de nuevo a la página de favoritos o a donde consideres apropiado
     return redirect('mis_favoritos')
