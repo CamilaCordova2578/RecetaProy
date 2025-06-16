@@ -10,8 +10,7 @@
         body { padding-top: 56px; }
         .messages { list-style: none; padding: 0; margin-top: 20px; }
         .messages li { padding: 10px; margin: 10px 0; border: 1px solid; border-radius: 4px; }
-        .messages li.success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
-        .messages li.info { background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
+        .messages li.success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }        .messages li.info { background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
         .messages li.warning { background-color: #fff3cd; border-color: #ffeeba; color: #856404; }
         .messages li.error { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
         .btn { padding: 8px 15px; background: #007bff; color: white; text-decoration: none; border: none; cursor: pointer; border-radius: 4px; }
@@ -70,9 +69,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'lista_recetas' %}">Recetas</a>
                     </li>
+                    {%comment%}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'lista_ingredientes' %}">Ingredientes</a>
                     </li>
+                    {%endcomment%}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'usuario:lista_usuarios' %}">Usuarios</a> {# Cambiado de usuarios: a usuario: #}
                     </li>
@@ -136,10 +137,6 @@
                                 <li><a class="dropdown-item" href="{% url 'usuario:configuracion' %}">Configuración de Cuenta</a></li> {# Cambiado de usuarios: a usuario: #}
                                  <li><a class="dropdown-item" href="{% url 'crear_receta' %}">Crear Receta</a></li> {# Cambiado de usuarios: a usuario: #}
                                 <li><hr class="dropdown-divider"></li>
-
-
-
-                                
 
 
 

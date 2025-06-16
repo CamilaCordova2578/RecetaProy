@@ -1,5 +1,5 @@
-{# recetas/perfil_usuario.html #}
-{% extends 'recetas/base.html' %} {# Asegúrate de extender tu plantilla base #}
+{
+{% extends 'recetas/base.html' %} {
 
 {% block content %}
     <h1>Perfil de Usuario: {{ user.username }}</h1>
@@ -8,18 +8,18 @@
         <h2>Información Personal</h2>
         <p><strong>Nombre de Usuario:</strong> {{ user.username }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
-        {# Si tienes un modelo de Usuario extendido y quieres mostrar sus campos adicionales: #}
-        {% if user.usuario %} {# Asumiendo que tu User de Django tiene un OneToOneField a tu modelo Usuario #}
+        {
+        {% if user.usuario %} {
             <p><strong>Nombre completo (según perfil):</strong> {{ user.usuario.nombre_usuario }}</p>
-            {# Otros campos de tu modelo Usuario si quieres mostrarlos #}
+            {
         {% endif %}
-        {# Opcional: Enlace para editar la información del perfil si creas una vista para ello #}
-        {# <a href="{% url 'editar_perfil_info' %}" class="btn-sm">Editar Información Personal</a> #}
+        {
+        {
     </section>
 
     <section class="create-recipe-section">
         <h2>Crear Nueva Receta</h2>
-        <form method="post" enctype="multipart/form-data"> {# Añade enctype para la imagen #}
+        <form method="post" enctype="multipart/form-data"> {
             {% csrf_token %}
             {{ form_creacion.as_p }}
             <button type="submit" name="crear_receta" class="btn">Guardar Receta</button>
@@ -29,14 +29,14 @@
     <section class="my-recipes-list">
         <h2>Mis Recetas Publicadas</h2>
         {% if recetas_del_usuario %}
-            <div class="recipe-cards-container"> {# Contenedor para las cards #}
+            <div class="recipe-cards-container"> {
                 {% for receta in recetas_del_usuario %}
-                    <div class="recipe-card"> {# Card individual #}
+                    <div class="recipe-card"> {
                         <a href="{% url 'detalle_receta' receta.id %}">
                             {% if receta.imagen %}
                                 <img src="{{ receta.imagen.url }}" alt="{{ receta.nombre }}" class="recipe-card-image">
                             {% else %}
-                                <img src="/static/img/default_recipe.png" alt="Imagen no disponible" class="recipe-card-image"> {# Usa una imagen por defecto #}
+                                <img src="/static/img/default_recipe.png" alt="Imagen no disponible" class="recipe-card-image"> {
                             {% endif %}
                         </a>
                         <div class="card-content">
@@ -54,15 +54,15 @@
                                 <button type="submit" name="eliminar_receta" class="btn btn-delete" onclick="return confirm('¿Estás seguro de que quieres eliminar esta receta?');">Eliminar</button>
                             </form>
                         </div>
-                    </div> {# Fin de recipe-card #}
+                    </div> {
                 {% endfor %}
-            </div> {# Fin de recipe-cards-container #}
+            </div> {
         {% else %}
             <p>Aún no has creado ninguna receta.</p>
         {% endif %}
     </section>
 
-    {# Opcional: Sección para "Mis Recetas Favoritas" - Si la vista 'perfil_usuario' la pasa #}
+    {
      <section class="my-favorites">
         <h2>Mis Recetas Favoritas</h2>
         {% if recetas_favoritas %}
@@ -82,7 +82,7 @@
                         </div>
                         <div class="card-actions">
                             <a href="{% url 'detalle_receta' receta.id %}" class="btn btn-view">Ver</a>
-                            {# Opcional: botón para quitar de favoritos #}
+                            {
                             <form class="favorite-toggle-form" action="{% url 'toggle_favorito' receta.id %}" method="post" data-receta-id="{{ receta.id }}">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-favorite">Quitar Favorito</button>

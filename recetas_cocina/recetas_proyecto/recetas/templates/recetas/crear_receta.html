@@ -47,17 +47,17 @@
     document.addEventListener('DOMContentLoaded', function() {
         const addIngredienteButton = document.getElementById('add-ingrediente-button');
         const formsetContainer = document.getElementById('formset-container');
-        const totalForms = document.querySelector('#id_ingredientes-TOTAL_FORMS'); // El ID del campo TOTAL_FORMS
-        const emptyForm = document.querySelector('.ingrediente-formset-row').cloneNode(true); // Clonar la primera fila para usarla como template
+        const totalForms = document.querySelector('#id_ingredientes-TOTAL_FORMS'); 
+        const emptyForm = document.querySelector('.ingrediente-formset-row').cloneNode(true); 
 
-        // Limpiar los valores y errores del formulario clonado
+        
         emptyForm.querySelectorAll('input, select, textarea').forEach(input => {
             input.value = '';
-            input.checked = false; // Para checkboxes
+            input.checked = false; 
         });
         emptyForm.querySelectorAll('.invalid-feedback, .errorlist').forEach(errorDiv => errorDiv.remove());
 
-        // Función para actualizar los IDs y nombres de los campos en el nuevo formulario
+        
         function updateElementIndex(element, prefix, index) {
             const idRegex = new RegExp(`(${prefix}-(\\d+)-)|(${prefix}__prefix__)`, 'g');
             const nameRegex = new RegExp(`(${prefix}-(\\d+)-)|(${prefix}-__prefix__)`, 'g');
@@ -68,7 +68,7 @@
             if (element.name) {
                 element.name = element.name.replace(nameRegex, `${prefix}-${index}-`);
             }
-            if (element.htmlFor) { // Para etiquetas <label>
+            if (element.htmlFor) { 
                 element.htmlFor = element.htmlFor.replace(idRegex, `${prefix}-${index}-`);
             }
         }
@@ -77,19 +77,17 @@
             const currentTotalForms = parseInt(totalForms.value);
             const newForm = emptyForm.cloneNode(true);
 
-            newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, currentTotalForms); // Reemplaza __prefix__ por el índice actual
+            newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, currentTotalForms); 
             newForm.querySelectorAll('input, select, textarea, label').forEach(element => {
-                updateElementIndex(element, 'ingredientes', currentTotalForms); // 'ingredientes' es el prefijo del formset
+                updateElementIndex(element, 'ingredientes', currentTotalForms); 
             });
-            newForm.querySelector('p').textContent = `Ingrediente ${currentTotalForms + 1}`; // Actualiza el número de ingrediente
+            newForm.querySelector('p').textContent = `Ingrediente ${currentTotalForms + 1}`; 
 
             formsetContainer.appendChild(newForm);
-            totalForms.value = currentTotalForms + 1; // Incrementa el total de formularios
+            totalForms.value = currentTotalForms + 1; 
         });
 
-        // Opcional: Funcionalidad para eliminar filas si can_delete=True
-        // Esto sería más complejo para hacerlo dinámicamente con JS, pero la casilla DELETE ya funciona.
-        // Si quieres un botón de "Eliminar" en cada fila, necesitarías más JS.
+        
     });
 </script>
 {% endblock %}

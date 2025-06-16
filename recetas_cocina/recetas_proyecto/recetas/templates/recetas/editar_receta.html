@@ -1,4 +1,3 @@
-<!-- templates/recetas/editar_receta.html -->
 {% extends 'recetas/base.html' %}
 {% load static %}
 
@@ -96,7 +95,7 @@
     <form method="post" enctype="multipart/form-data" id="receta-form">
         {% csrf_token %}
         
-        <!-- Datos de la Receta -->
+    
         <div class="form-section">
             <h3 class="section-title">
                 <i class="fas fa-clipboard-list"></i> Datos de la Receta
@@ -162,7 +161,7 @@
             </div>
         </div>
 
-        <!-- Ingredientes -->
+        
         <div class="form-section">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="section-title mb-0">
@@ -217,7 +216,7 @@
                             </div>
                         </div>
                         
-                        <!-- Campos ocultos -->
+
                         {% for hidden in form.hidden_fields %}
                             {{ hidden }}
                         {% endfor %}
@@ -231,7 +230,7 @@
             </div>
         </div>
 
-        <!-- Botones de acción -->
+        
         <div class="text-center mb-4">
             <button type="submit" class="btn btn-primary btn-lg me-3">
                 <i class="fas fa-save"></i> Actualizar Receta
@@ -243,7 +242,7 @@
     </div>
 </div>
 
-<!-- Template para nuevos ingredientes (oculto) -->
+
 
 {% endblock %}
 
@@ -256,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addButton = document.getElementById('add-ingredient');
     const totalFormsInput = document.querySelector('[name$="TOTAL_FORMS"]');
 
-    // Función para actualizar unidad de medida
+
     function updateUnidad(selectElement) {
         const unidadInput = selectElement.closest('.ingredient-row').querySelector('.unidad-display');
         const selectedOption = selectElement.options[selectElement.selectedIndex];
@@ -264,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
         unidadInput.value = unidad;
     }
 
-    // Agregar ingrediente
+    
     addButton.addEventListener('click', function() {
         if (formCount < maxForms) {
             const template = document.getElementById('empty-form-template');
@@ -277,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formCount++;
             totalFormsInput.value = formCount;
             
-            // Agregar event listener al nuevo select
+
             const newSelect = container.lastElementChild.querySelector('.ingrediente-select');
             newSelect.addEventListener('change', function() {
                 updateUnidad(this);
@@ -285,14 +284,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Eliminar ingrediente
     container.addEventListener('click', function(e) {
         if (e.target.closest('.remove-ingredient')) {
             e.preventDefault();
             const row = e.target.closest('.ingredient-row');
             row.remove();
             
-            // Reordenar índices
+     
             const rows = container.querySelectorAll('.formset-row');
             rows.forEach((row, index) => {
                 const inputs = row.querySelectorAll('input, select');
@@ -312,13 +310,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Event listeners para selects existentes
     document.querySelectorAll('.ingrediente-select').forEach(select => {
         select.addEventListener('change', function() {
             updateUnidad(this);
         });
         
-        // Inicializar unidades existentes
         updateUnidad(select);
     });
 });
