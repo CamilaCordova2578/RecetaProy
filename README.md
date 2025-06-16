@@ -4,3 +4,4 @@
 * Leonor Chavarria<br>
 * Gabriel Jimenez<br>
 * Jhoel Mamani<br>
+* Ariel Arteaga<br>
