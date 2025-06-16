@@ -1,6 +1,6 @@
-{
+
 {% extends 'recetas/base.html' %}
-{% load static %} {
+{% load static %} 
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -19,7 +19,7 @@
                         {% if favorito.receta.imagen %}
                             <img src="{{ favorito.receta.imagen.url }}" class="card-img-top" alt="{{ favorito.receta.nombre }}" style="height: 200px; object-fit: cover;">
                         {% else %}
-                            {
+                            
                             <img src="{% static 'images/default_recipe.png' %}" class="card-img-top" alt="Imagen por defecto" style="height: 200px; object-fit: cover;">
                         {% endif %}
                         <div class="card-body">
